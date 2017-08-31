@@ -20,6 +20,20 @@ public class Item {
 	
 	@Enumerated(EnumType.STRING)
 	private TipoItem tipo;
+	
+	public enum TipoItem {
+		PECA("PEÇA"), SERVICO("SERVIÇO");
+		
+		private String tipo;
+		
+		private TipoItem(String tipo) {
+			this.tipo = tipo;
+		}
+		
+		public String getTipo() {
+			return tipo;
+		}
+	}
 
 	public Long getId() {
 		return id;
@@ -77,8 +91,4 @@ public class Item {
 			return false;
 		return true;
 	}
-}
-
-enum TipoItem {
-	PEÇA, SERVIÇO
 }
