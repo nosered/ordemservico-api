@@ -1,16 +1,17 @@
 package br.eti.esabreu.ordemservico.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class OrdemServico {
@@ -22,12 +23,8 @@ public class OrdemServico {
 	@ManyToOne
 	private Cliente cliente;
 	
-	@ManyToMany
-	@JoinTable(name = "itens_os",
-			joinColumns = @JoinColumn(name = "os_id"),
-			inverseJoinColumns = @JoinColumn(name = "item_id")
-	)
-	private List<Item> itens;
+	@OneToMany(mappedBy = "ordemServico")
+	private List<ItemOrdemServico> itensOrdemServico;
 	
 	private String equipamento;
 	
@@ -39,6 +36,22 @@ public class OrdemServico {
 	
 	private LocalDate saida;
 	
+	@Enumerated(EnumType.STRING)
+	private Status status;
+	
+	public enum Status {
+		ORCAMENTO("ORÇAMENTO"), ABERTA("ABERTA"), ATENDIMENTO("EM ATENDIMENTO"), FECHADA("FECHADA");
+		
+		private String status;
+		
+		private Status(String status) {
+			this.status = status;
+		}
+		
+		public String getStatus() {
+			return status;
+		}
+	}
 
 	public Long getId() {
 		return id;
@@ -56,12 +69,12 @@ public class OrdemServico {
 		this.cliente = cliente;
 	}
 
-	public List<Item> getItens() {
-		return itens;
+	public List<ItemOrdemServico> getItens() {
+		return itensOrdemServico;
 	}
 
-	public void setItens(List<Item> itens) {
-		this.itens = itens;
+	public void setItens(List<ItemOrdemServico> itensOrdemServico) {
+		this.itensOrdemServico = itensOrdemServico;
 	}
 
 	public String getEquipamento() {
@@ -102,6 +115,12 @@ public class OrdemServico {
 
 	public void setSaida(LocalDate saida) {
 		this.saida = saida;
+	}
+	
+	public void addItemOrdemServico(ItemOrdemServico itemOrdemServico) {
+		if(itensOrdemServico == null)
+			itensOrdemServico = new ArrayList<ItemOrdemServico>();
+		itensOrdemServico.add(itemOrdemServico);
 	}
 
 	@Override
